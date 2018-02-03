@@ -1,0 +1,13 @@
+.DS_Store
+
+printf_main.c
+printf_main2.c
+*.a
+
+cmake-build-debug/
+.idea/
+objs/
+
+tmp*
+a.out
+CMakeLists.txt
