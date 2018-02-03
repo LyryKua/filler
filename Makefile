@@ -6,7 +6,7 @@
 #    By: khrechen <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/12/14 14:55:42 by khrechen          #+#    #+#              #
-#    Updated: 2018/02/03 19:33:31 by khrechen         ###   ########.fr        #
+#    Updated: 2018/02/03 20:36:00 by khrechen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -51,32 +51,40 @@ FLAGS :=				$(INC) $(CFLAGS) $(LIBFTPRINTF_FLAGS)
 all: $(NAME)
 
 $(NAME): lib $(OBJS)
+	echo "$(YELLOW)Linking binary...$(NORMAL)"
 	$(CC) $(FLAGS) $(OBJS) -o $(NAME)
 
 $(OBJS_DIR)%.o: $(FILLER_DIR)%.c
+	echo "$(CYAN)Compiling $@$(NORMAL)"
 	$(CC) $(CFLAGS) $(INC) -c $< -o $@  
 
 $(OBJS): | $(OBJS_DIR)
 
 $(OBJS_DIR):
 	mkdir $(OBJS_DIR)
+	echo "$(GREEN)$(OBJS_DIR) created...$(NORMAL)"
 
 lib: $(LIBFTPRINTF)
 
 $(LIBFTPRINTF):
+	echo "$(YELLOW)Making $(LIBFTPRINTF)$(NORMAL)"
 	make -C $(LIBFTPRINTF_DIR)
 
 libclean:
+	echo "$(RED)Cleaning $(LIBFTPRINTF)$(NORMAL)"
 	make clean -C $(LIBFTPRINTF_DIR)
 
 libfclean:
+	echo "$(RED)Fcleaning $(LIBFTPRINTF)$(NORMAL)"
 	make fclean -C $(LIBFTPRINTF_DIR)
 
 clean: libclean
 	rm -rf $(OBJS_DIR)
+	echo "$(RED)$(OBJS_DIR) deleted$(NORMAL)"
 
 fclean: clean libfclean
 	rm -f $(NAME)
+	echo "$(RED)$(NAME) deleted$(NORMAL)"
 
 re: fclean all
 
@@ -86,7 +94,9 @@ norm:
 
 pu: fclean 
 	make pu -C $(LIBFTPRINTF_DIR)
-	git add $(SRCS) $(HEADER)
+	git add Makefile .gitignore author $(SRCS) $(HEADER)
+	git status
+	echo "$(CYAN)You can commit your files$(NORMAL)"
 
-.PHONY: all lib libclean libfclean clean fclean re norm pu $(NAME)
+.PHONY: all lib libclean libfclean clean fclean re norm pu $(NAME) $(LIBFTPRINTF)
 .SILENT:

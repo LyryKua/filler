@@ -6,7 +6,7 @@
 #    By: khrechen <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/12/14 14:55:42 by khrechen          #+#    #+#              #
-#    Updated: 2018/01/30 15:34:15 by khrechen         ###   ########.fr        #
+#    Updated: 2018/02/03 20:24:36 by khrechen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -115,34 +115,27 @@ FLAGS :=		$(CFLAGS) $(INC)
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	@ar rc $(NAME) $(OBJS)
-	@ranlib $(NAME)
-	@echo "$(BOLD)$(CYAN)ft_printf/$(NAME) is done!$(NORMAL)"
+	ar rc $(NAME) $(OBJS)
+	ranlib $(NAME)
 
 $(OBJS_DIR)%.o: %.c
-	@$(CC) $(FLAGS) -c $< -o $@ 
-	@echo "\t-> $(CYAN)Created ft_printf/$@$(NORMAL)"
+	$(CC) $(FLAGS) -c $< -o $@ 
 
 $(OBJS): | $(OBJS_DIR)
 
 $(OBJS_DIR):
-	@mkdir $(OBJS_DIR)
-	@echo "$(CYAN)Created ft_printf/$(OBJS_DIR)$(NORMAL)"
+	mkdir $(OBJS_DIR)
 
 clean:
-	@rm -rf $(OBJS_DIR)
-	@echo "$(RED)Deleted ft_printf/$(OBJS_DIR)$(NORMAL)"
+	rm -rf $(OBJS_DIR)
 
 fclean: clean
-	@rm -f $(NAME)
-	@echo "$(RED)Deleted ft_printf/$(NAME)$(NORMAL)"
+	rm -f $(NAME)
 
 re: fclean all
 
 norm:
-	@norminette $(SRCS) $(INC_DIR)libft.h
+	norminette $(SRCS) $(INC_DIR)libft.h
 
-pu:
-	@rm -rf $(OBJS_DIR)
-	@rm -f $(NAME)
-	@echo "$(BOLD)You can push libft files!$(NORMAL)"
+pu: fclean
+	git add Makefile .gitignore author $(SRCS) $(INC_DIR)libft.h
