@@ -6,7 +6,7 @@
 #    By: khrechen <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/12/14 14:55:42 by khrechen          #+#    #+#              #
-#    Updated: 2018/02/03 20:36:00 by khrechen         ###   ########.fr        #
+#    Updated: 2018/02/03 20:49:14 by khrechen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,7 +23,7 @@ LIGHT_YELLOW :=			$(SWITCH)93m
 LIGHT_GREEN :=			$(SWITCH)92m
 LIGHT_CYAN :=			$(SWITCH)96m
 
-NAME :=					filler
+NAME :=					khrechen.filler
 
 INC_DIR :=				inc/
 HEADER :=				$(INC_DIR)filler.h
@@ -53,6 +53,7 @@ all: $(NAME)
 $(NAME): lib $(OBJS)
 	echo "$(YELLOW)Linking binary...$(NORMAL)"
 	$(CC) $(FLAGS) $(OBJS) -o $(NAME)
+	echo "$(LIGHT_GREEN)$(NAME)$(GREEN) is your binary! Enjoy!$(NORMAL)"
 
 $(OBJS_DIR)%.o: $(FILLER_DIR)%.c
 	echo "$(CYAN)Compiling $@$(NORMAL)"
