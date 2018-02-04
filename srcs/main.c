@@ -11,6 +11,8 @@
 /* ************************************************************************** */
 
 #include <stdlib.h>
+#include <fcntl.h>
+#include <zconf.h>
 #include "ft_printf.h"
 #include "libft.h"
 
@@ -22,8 +24,18 @@ void	error_exit(char *msg)
 
 int	main(int argc, char *argv[])
 {
+	char	*line;
+	int		fd;
+
 	if (argc != 2)
-		error_exit("usage:");
-	ft_printf("argv[1]: %s\n", argv[1]);
+		error_exit("usage: input");
+	fd = open(argv[1], O_RDONLY);
+	while (get_next_line(fd, &line) == 1)
+	{
+		ft_putendl(line);
+		ft_strdel(&line);
+	}
+	close(fd);
+//	while (42);
 	return (0);
 }

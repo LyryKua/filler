@@ -6,7 +6,7 @@
 #    By: khrechen <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/12/14 14:55:42 by khrechen          #+#    #+#              #
-#    Updated: 2018/02/04 15:37:12 by khrechen         ###   ########.fr        #
+#    Updated: 2018/02/04 16:22:53 by khrechen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -100,7 +100,9 @@ MY_PART :=		ft_isspace.c		\
 				ft_ulltoa_base.c	\
 				ft_putunichar.c
 
-SRCS :=			$(PART1) $(PART2) $(PART3) $(MY_PART)
+GNL :=			get_next_line.c
+
+SRCS :=			$(PART1) $(PART2) $(PART3) $(MY_PART) $(GNL)
 
 OBJS_DIR :=		objs/
 OBJS :=			$(addprefix $(OBJS_DIR), $(SRCS:.c=.o))
@@ -138,4 +140,4 @@ norm:
 	norminette $(SRCS) $(INC_DIR)libft.h
 
 pu:
-	git add Makefile .gitignore author $(SRCS) $(INC_DIR)libft.h
+	git add Makefile .gitignore author $(SRCS) $(INC_DIR)libft.h $(INC_DIR)get_next_line.h
