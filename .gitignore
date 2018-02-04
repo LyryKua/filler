@@ -1,2 +1,6 @@
 filler
+khrechen.filler
+
 objs/
+.idea/
+cmake-build-debug/

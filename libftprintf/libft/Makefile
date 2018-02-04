@@ -6,7 +6,7 @@
 #    By: khrechen <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/12/14 14:55:42 by khrechen          #+#    #+#              #
-#    Updated: 2018/02/03 20:24:36 by khrechen         ###   ########.fr        #
+#    Updated: 2018/02/04 15:37:12 by khrechen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -137,5 +137,5 @@ re: fclean all
 norm:
 	norminette $(SRCS) $(INC_DIR)libft.h
 
-pu: fclean
+pu:
 	git add Makefile .gitignore author $(SRCS) $(INC_DIR)libft.h

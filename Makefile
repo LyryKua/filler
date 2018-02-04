@@ -6,7 +6,7 @@
 #    By: khrechen <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/12/14 14:55:42 by khrechen          #+#    #+#              #
-#    Updated: 2018/02/03 20:49:14 by khrechen         ###   ########.fr        #
+#    Updated: 2018/02/04 15:36:49 by khrechen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -93,7 +93,7 @@ norm:
 	make norm -C $(LIBFTPRINTF_DIR)
 	norminette $(SRCS) $(HEADER)
 
-pu: fclean 
+pu: 
 	make pu -C $(LIBFTPRINTF_DIR)
 	git add Makefile .gitignore author $(SRCS) $(HEADER)
 	git status
