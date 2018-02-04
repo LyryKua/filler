@@ -1,6 +1,8 @@
 filler
 khrechen.filler
+filler.trace
 
 objs/
 .idea/
 cmake-build-debug/
+resources/
