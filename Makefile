@@ -29,7 +29,10 @@ INC_DIR :=				inc/
 HEADER :=				$(INC_DIR)filler.h
 
 FILLER_DIR :=			srcs/
-FILLER_SRCS :=			main.c
+FILLER_SRCS :=			main.c		\
+						read.c		\
+						plateau.c	\
+						piece.c
 SRCS :=					$(addprefix $(FILLER_DIR), $(FILLER_SRCS))
 
 OBJS_DIR :=				objs/
