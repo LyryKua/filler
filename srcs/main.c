@@ -29,8 +29,8 @@ void	error_exit(char *str)
 int		main(int argc, char *argv[])
 {
 	t_stuff	instance;
-	t_plateau	plateau;
-	t_piece		piece;
+	t_sqr	plateau;
+	t_sqr	piece;
 	int		fd;
 	char	*line;
 

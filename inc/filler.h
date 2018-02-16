@@ -21,35 +21,20 @@
 ** ********************************** Plateau **********************************
 */
 
-typedef struct s_plateau	t_plateau;
-struct		s_plateau
+typedef struct s_sqr	t_sqr;
+struct		s_sqr
 {
 	int		rows;
 	int		columns;
 	char	**sqr;
-	char	**(*read)(t_plateau *, int);
-	void	(*destructor)(t_plateau *);
+	char	**(*read)(t_sqr *, int);
+	void	(*destructor)(t_sqr *);
 };
-t_plateau	plateau_init(int fd);
-char		**plateau_read(t_plateau *plateau, int fd);
-void		plateau_desturctor(t_plateau *plateau);
-
-/*
-** *********************************** Piece ***********************************
-*/
-
-typedef struct s_piece		t_piece;
-struct		s_piece
-{
-	int		rows;
-	int		columns;
-	char	**sqr;
-	char	**(*read)(t_piece *, int);
-	void	(*destructor)(t_piece *);
-};
-t_piece		piece_init(int fd);
-char		**piece_read(t_piece *piece, int fd);
-void		piece_desturctor(t_piece *piece);
+t_sqr		piece_init(int fd);
+t_sqr		plateau_init(int fd);
+char		**piece_read(t_sqr *piece, int fd);
+char		**plateau_read(t_sqr *plateau, int fd);
+void		desturctor(t_sqr *sqr);
 
 /*
 ** *********************************** Piece ***********************************
@@ -60,12 +45,10 @@ typedef struct s_stuff		t_stuff;
 struct		s_stuff
 {
 	char		me;
-	t_plateau	plateau;
-	t_piece		*piece;
+	t_sqr		plateau;
+	t_sqr		piece;
 	char		**(*insert_piece)(t_stuff *);
 };
 char		**insert_piece(t_stuff *instance);
-
-t_piece		*read_piece(int fd);
 
 #endif

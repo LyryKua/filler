@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   plateau.c                                          :+:      :+:    :+:   */
+/*   sqr.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: khrechen <khrechen@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -14,9 +14,9 @@
 #include "filler.h"
 #include "libft.h"
 
-t_plateau	plateau_init(int fd)
+t_sqr	plateau_init(int fd)
 {
-	t_plateau	plateau;
+	t_sqr		plateau;
 	char		*line;
 
 	get_next_line(fd, &line);
@@ -24,12 +24,27 @@ t_plateau	plateau_init(int fd)
 	plateau.columns = ft_atoi(ft_strchr(line + 8, ' '));
 	plateau.sqr = NULL;
 	plateau.read = plateau_read;
-	plateau.destructor = plateau_desturctor;
+	plateau.destructor = desturctor;
 	ft_strdel(&line);
 	return (plateau);
 }
 
-char		**plateau_read(t_plateau *plateau, int fd)
+t_sqr	piece_init(int fd)
+{
+	t_sqr	piece;
+	char		*line;
+
+	get_next_line(fd, &line);
+	piece.rows = ft_atoi(line + 6);
+	piece.columns = ft_atoi(ft_strchr(line + 6, ' '));
+	piece.sqr = NULL;
+	piece.read = piece_read;
+	piece.destructor = desturctor;
+	ft_strdel(&line);
+	return (piece);
+}
+
+char		**plateau_read(t_sqr *plateau, int fd)
 {
 	char	*line;
 	char	*tmp;
@@ -57,12 +72,37 @@ char		**plateau_read(t_plateau *plateau, int fd)
 	return (plateau->sqr);
 }
 
-void		plateau_desturctor(t_plateau *plateau)
+char		**piece_read(t_sqr *piece, int fd)
+{
+	char	*line;
+	char	*tmp;
+	int		i;
+
+	if (piece->sqr == NULL)
+	{
+		piece->sqr = (char **)malloc(sizeof(char *) * piece->rows);
+		i = 0;
+		while (i < piece->rows)
+			piece->sqr[i++] = NULL;
+	}
+	i = 0;
+	while (i < piece->rows)
+	{
+		get_next_line(fd, &line);
+		tmp = line;
+		ft_strdel(&piece->sqr[i]);
+		piece->sqr[i] = tmp;
+		i++;
+	}
+	return (piece->sqr);
+}
+
+void		desturctor(t_sqr *sqr)
 {
 	int	i;
 
 	i = 0;
-	while (i < plateau->rows)
-		ft_strdel(&plateau->sqr[i++]);
-	free(plateau->sqr);
+	while (i < sqr->rows)
+		ft_strdel(&sqr->sqr[i++]);
+	free(sqr->sqr);
 }
