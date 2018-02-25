@@ -31,8 +31,10 @@ struct	s_sqr
 	int		rows;
 	int		columns;
 	char	**sqr;
+	int		evaluation;
 	char	**(*read)(t_sqr *, int);
 	t_sqr	*(*sqrdup)(t_sqr *);
+	void	(*set_evaluation)(t_sqr *, char);
 	void	(*destructor)(t_sqr *);
 };
 t_sqr	piece_init(int fd);
@@ -40,6 +42,7 @@ t_sqr	plateau_init(int fd);
 char	**piece_read(t_sqr *piece, int fd);
 char	**plateau_read(t_sqr *plateau, int fd);
 t_sqr	*sqrdup(t_sqr *sqr);
+void	set_evaluation(t_sqr *sqr, char me);
 void	desturctor(t_sqr *sqr);
 
 /*

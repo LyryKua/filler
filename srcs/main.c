@@ -62,9 +62,8 @@ void	putsqr(t_sqr *plateau, int i, int j)
 	ft_printf("***********************\n");
 }
 
-t_list	*piece_to_plateau(t_stuff *instance, int y, int x)
+t_sqr	*piece_to_plateau(t_stuff *instance, int y, int x)
 {
-	t_list	*new;
 	t_sqr	*plato;
 	int		i;
 	int		j;
@@ -82,16 +81,16 @@ t_list	*piece_to_plateau(t_stuff *instance, int y, int x)
 		}
 		i++;
 	}
-	new = ft_lstnew(plato, 42);
-	return (new);
+	plato->set_evaluation(plato, instance->me);
+	return (plato);
 }
 
-void	try_insert(t_stuff *instance, int i, int j, t_list **head)
+void	try_insert(t_stuff *instance, int i, int j, t_sqr **good_sqr)
 {
 	int		x;
 	int		y;
 	int		match;
-	t_list	*new;
+	t_sqr	*tmp;
 
 	match = 0;
 	y = 0;
@@ -109,8 +108,12 @@ void	try_insert(t_stuff *instance, int i, int j, t_list **head)
 	}
 	if (match == 1)
 	{
-		new = piece_to_plateau(instance, i, j);
-		ft_lstadd(head, new);
+		tmp = piece_to_plateau(instance, i, j);
+		if (tmp->evaluation > instance->plateau.evaluation)
+		{
+			instance->plateau.destructor(&instance->plateau);
+			instance->plateau = *tmp;
+		}
 	}
 }
 
@@ -118,25 +121,19 @@ char	**insert_piece(t_stuff *instance)
 {
 	int		i;
 	int		j;
-	t_list	*head;
+	t_sqr	*good_sqr;
 
-	head = NULL;
+	good_sqr = NULL;
 	i = 0;
 	while (i < instance->plateau.rows - instance->piece.rows)
 	{
 		j = 0;
 		while (j < instance->plateau.columns - instance->piece.columns)
 		{
-			try_insert(instance, i, j, &head);
+			try_insert(instance, i, j, &good_sqr);
 			j++;
 		}
 		i++;
-	}
-	while (head != NULL)
-	{
-		putsqr(head->plateau, 0 , 0);
-		ft_printf("e = %d\n", head->evaluation);
-		head = head->next;
 	}
 	return (instance->plateau.sqr);
 }

@@ -23,8 +23,10 @@ t_sqr	plateau_init(int fd)
 	plateau.rows = ft_atoi(line + 8);
 	plateau.columns = ft_atoi(ft_strchr(line + 8, ' '));
 	plateau.sqr = NULL;
+	plateau.evaluation = 0;
 	plateau.read = plateau_read;
 	plateau.sqrdup = sqrdup;
+	plateau.set_evaluation = set_evaluation;
 	plateau.destructor = desturctor;
 	ft_strdel(&line);
 	return (plateau);
@@ -41,6 +43,8 @@ t_sqr	piece_init(int fd)
 	piece.sqr = NULL;
 	piece.read = piece_read;
 	piece.sqrdup = sqrdup;
+	piece.evaluation = 0;
+	piece.set_evaluation = set_evaluation;
 	piece.destructor = desturctor;
 	ft_strdel(&line);
 	return (piece);
@@ -120,6 +124,35 @@ t_sqr	*sqrdup(t_sqr *sqr)
 	return (new);
 }
 
+static int	compute_length(t_sqr *sqr, int i, int j, char me)
+{
+
+	return (0);
+}
+
+void	set_evaluation(t_sqr *sqr, char me)
+{
+	int				i;
+	int				j;
+	unsigned int	o_me;
+	unsigned int	o_enemy;
+
+	i = 0;
+	while (i < sqr->rows)
+	{
+		j = 0;
+		while (j < sqr->columns)
+		{
+			if (sqr->sqr[i][j] == '.')
+			{
+				// compute evaluation
+				sqr->evaluation += compute_length(sqr, i, j, me);
+			}
+			j++;
+		}
+		i++;
+	}
+}
 void	desturctor(t_sqr *sqr)
 {
 	int	i;
