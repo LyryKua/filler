@@ -3,6 +3,8 @@ khrechen.filler
 filler.trace
 input
 output
+*.[ao]
+tmp*
 
 objs/
 .idea/

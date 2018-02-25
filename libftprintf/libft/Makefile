@@ -81,13 +81,6 @@ PART2 :=		ft_memalloc.c		\
 				ft_putendl_fd.c		\
 				ft_putnbr_fd.c
 
-PART3 :=		ft_lstnew.c			\
-				ft_lstdelone.c		\
-				ft_lstdel.c			\
-				ft_lstadd.c			\
-				ft_lstiter.c		\
-				ft_lstmap.c
-
 MY_PART :=		ft_isspace.c		\
 				ft_abs.c			\
 				ft_labs.c			\
@@ -102,7 +95,7 @@ MY_PART :=		ft_isspace.c		\
 
 GNL :=			get_next_line.c
 
-SRCS :=			$(PART1) $(PART2) $(PART3) $(MY_PART) $(GNL)
+SRCS :=			$(PART1) $(PART2) $(MY_PART) $(GNL)
 
 OBJS_DIR :=		objs/
 OBJS :=			$(addprefix $(OBJS_DIR), $(SRCS:.c=.o))

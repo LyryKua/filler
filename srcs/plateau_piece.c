@@ -24,6 +24,7 @@ t_sqr	plateau_init(int fd)
 	plateau.columns = ft_atoi(ft_strchr(line + 8, ' '));
 	plateau.sqr = NULL;
 	plateau.read = plateau_read;
+	plateau.sqrdup = sqrdup;
 	plateau.destructor = desturctor;
 	ft_strdel(&line);
 	return (plateau);
@@ -39,12 +40,13 @@ t_sqr	piece_init(int fd)
 	piece.columns = ft_atoi(ft_strchr(line + 6, ' '));
 	piece.sqr = NULL;
 	piece.read = piece_read;
+	piece.sqrdup = sqrdup;
 	piece.destructor = desturctor;
 	ft_strdel(&line);
 	return (piece);
 }
 
-char		**plateau_read(t_sqr *plateau, int fd)
+char	**plateau_read(t_sqr *plateau, int fd)
 {
 	char	*line;
 	char	*tmp;
@@ -72,7 +74,7 @@ char		**plateau_read(t_sqr *plateau, int fd)
 	return (plateau->sqr);
 }
 
-char		**piece_read(t_sqr *piece, int fd)
+char	**piece_read(t_sqr *piece, int fd)
 {
 	char	*line;
 	char	*tmp;
@@ -97,7 +99,28 @@ char		**piece_read(t_sqr *piece, int fd)
 	return (piece->sqr);
 }
 
-void		desturctor(t_sqr *sqr)
+t_sqr	*sqrdup(t_sqr *sqr)
+{
+	t_sqr	*new;
+	size_t	i;
+
+	new = (t_sqr *)malloc(sizeof(t_sqr));
+	new->rows = sqr->rows;
+	new->columns = sqr->columns;
+	new->sqr = (char **)malloc(new->rows * sizeof(char *));
+	i = 0;
+	while (i < new->rows)
+	{
+		new->sqr[i] = ft_strdup(sqr->sqr[i]);
+		i++;
+	}
+	new->read = sqr->read;
+	new->sqrdup = sqr->sqrdup;
+	new->destructor = sqr->destructor;
+	return (new);
+}
+
+void	desturctor(t_sqr *sqr)
 {
 	int	i;
 

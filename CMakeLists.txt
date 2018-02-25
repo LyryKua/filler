@@ -26,6 +26,6 @@ set(SOURCE_FILES
 		srcs/plateau_piece.c
 
 		srcs/main.c
-		) # sources
+		srcs/lists.c) # sources
 
 add_executable(khrechen.filler ${SOURCE_FILES} ${HEADERS}) # compilation
