@@ -3,6 +3,7 @@ khrechen.filler
 filler.trace
 input
 output
+test
 *.[ao]
 tmp*
 

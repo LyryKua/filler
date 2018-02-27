@@ -23,8 +23,11 @@ set(HEADERS
         ) # headers
 
 set(SOURCE_FILES
+        srcs/insert_piece.c
         srcs/plateau_piece.c
-        srcs/lists.c
+        srcs/putsqr.c
+        srcs/set_evaluation.c
+        srcs/wave.c
 
         srcs/main.c
         ) # sources

@@ -13,40 +13,42 @@
 #include <stdlib.h>
 #include "filler.h"
 #include "libft.h"
+#include <limits.h>
+#include <printf.h>
 
-t_sqr	plateau_init(int fd)
+t_sqr	*plateau_init(int fd)
 {
-	t_sqr		plateau;
-	char		*line;
+	t_sqr	*plateau;
+	char	*line;
 
+	plateau = (t_sqr *)malloc(sizeof(t_sqr));
 	get_next_line(fd, &line);
-	plateau.rows = ft_atoi(line + 8);
-	plateau.columns = ft_atoi(ft_strchr(line + 8, ' '));
-	plateau.sqr = NULL;
-	plateau.evaluation = 0;
-	plateau.read = plateau_read;
-	plateau.sqrdup = sqrdup;
-	plateau.set_evaluation = set_evaluation;
-	plateau.destructor = desturctor;
+	plateau->rows = ft_atoi(line + 8);
+	plateau->columns = ft_atoi(ft_strchr(line + 8, ' '));
+	plateau->sqr = NULL;
+	plateau->evaluation = 0;
+	plateau->read = plateau_read;
+	plateau->sqrdup = sqrdup;
+	plateau->set_evaluation = set_evaluation;
+	plateau->destructor = destructor;
 	ft_strdel(&line);
 	return (plateau);
 }
 
-t_sqr	piece_init(int fd)
+t_sqr	*piece_init()
 {
-	t_sqr	piece;
-	char		*line;
+	t_sqr	*piece;
+	char	*line;
 
-	get_next_line(fd, &line);
-	piece.rows = ft_atoi(line + 6);
-	piece.columns = ft_atoi(ft_strchr(line + 6, ' '));
-	piece.sqr = NULL;
-	piece.read = piece_read;
-	piece.sqrdup = sqrdup;
-	piece.evaluation = 0;
-	piece.set_evaluation = set_evaluation;
-	piece.destructor = desturctor;
-	ft_strdel(&line);
+	piece = (t_sqr *)malloc(sizeof(t_sqr));
+	piece->rows = 0;
+	piece->columns = 0;
+	piece->sqr = NULL;
+	piece->read = piece_read;
+	piece->sqrdup = sqrdup;
+	piece->evaluation = 0;
+	piece->set_evaluation = set_evaluation;
+	piece->destructor = destructor;
 	return (piece);
 }
 
@@ -84,6 +86,10 @@ char	**piece_read(t_sqr *piece, int fd)
 	char	*tmp;
 	int		i;
 
+	get_next_line(fd, &line);
+	piece->rows = ft_atoi(line + 6);
+	piece->columns = ft_atoi(ft_strchr(line + 6, ' '));
+	ft_strdel(&line);
 	if (piece->sqr == NULL)
 	{
 		piece->sqr = (char **)malloc(sizeof(char *) * piece->rows);
@@ -118,42 +124,15 @@ t_sqr	*sqrdup(t_sqr *sqr)
 		new->sqr[i] = ft_strdup(sqr->sqr[i]);
 		i++;
 	}
+	new->evaluation = sqr->evaluation;
+	new->set_evaluation = sqr->set_evaluation;
 	new->read = sqr->read;
 	new->sqrdup = sqr->sqrdup;
 	new->destructor = sqr->destructor;
 	return (new);
 }
 
-static int	compute_length(t_sqr *sqr, int i, int j, char me)
-{
-
-	return (0);
-}
-
-void	set_evaluation(t_sqr *sqr, char me)
-{
-	int				i;
-	int				j;
-	unsigned int	o_me;
-	unsigned int	o_enemy;
-
-	i = 0;
-	while (i < sqr->rows)
-	{
-		j = 0;
-		while (j < sqr->columns)
-		{
-			if (sqr->sqr[i][j] == '.')
-			{
-				// compute evaluation
-				sqr->evaluation += compute_length(sqr, i, j, me);
-			}
-			j++;
-		}
-		i++;
-	}
-}
-void	desturctor(t_sqr *sqr)
+void	destructor(t_sqr *sqr)
 {
 	int	i;
 
