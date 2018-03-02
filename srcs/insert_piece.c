@@ -2,26 +2,25 @@
 #include "libft.h"
 #include "ft_printf.h"
 
-t_sqr	*piece_to_plateau(t_stuff *instance, int i, int j)
+t_sqr	*piece_to_plateau(t_stuff *instance, t_sqr *plateau, int i, int j)
 {
-	t_sqr	*plateau;
 	int		y;
 	int		x;
+	char	enemy;
 
-	plateau = instance->plateau->sqrdup(instance->plateau);
+	enemy = (char)(instance->me == 'X' ? 'O' : 'X');
 	y = 0;
 	while (y < instance->piece->rows)
 	{
 		x = 0;
 		while (x < instance->piece->columns)
 		{
-			if (instance->piece->sqr[y][x] == '*')
+			if (instance->piece->sqr[y][x] == '*' && ft_toupper(plateau->sqr[i + y][j + x]) != enemy)
 				plateau->sqr[i + y][j + x] = (char)ft_tolower(instance->me);
 			x++;
 		}
 		y++;
 	}
-	putsqr(plateau);
 	return (plateau);
 }
 
@@ -38,32 +37,18 @@ static unsigned int	count_match(t_stuff *instance, int i, int j)
 		x = 0;
 		while (x < instance->piece->columns)
 		{
-			if (instance->piece->sqr[y][x] == '*'
-						&& instance->plateau->sqr[i + y][j + x] == instance->me)
-				match++;
+			if (instance->piece->sqr[y][x] == '*')
+			{
+				if (instance->plateau->sqr[i + y][j + x] == instance->enemy)
+					return (0);
+				else if (instance->plateau->sqr[i + y][j + x] == instance->me)
+					match++;
+			}
 			x++;
 		}
 		y++;
 	}
 	return (match);
-}
-
-static void			try_insert(t_stuff *instance, int i, int j)
-{
-	t_sqr	*tmp;
-
-	if (count_match(instance, i, j) == 1)
-	{
-		tmp = piece_to_plateau(instance, i, j);
-		tmp->set_evaluation(tmp, instance->me);
-		if (tmp->evaluation > instance->plateau->evaluation)
-		{
-			instance->plateau->destructor(instance->plateau);
-			instance->plateau = tmp;
-			instance->i = i;
-			instance->j = j;
-		}
-	}
 }
 
 void				insert_piece(t_stuff *instance)
@@ -77,11 +62,12 @@ void				insert_piece(t_stuff *instance)
 		j = 0;
 		while (j <= instance->plateau->columns - instance->piece->columns)
 		{
-			try_insert(instance, i, j);
+			if (count_match(instance, i, j) == 1)
+				instance->set_i_j(instance);
 			j++;
 		}
 		i++;
 	}
 	ft_printf("%d %d\n", instance->i, instance->j);
-	ft_putendl("******************");
+	ft_printf("len = %d\n", instance->len);
 }

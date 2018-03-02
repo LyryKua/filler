@@ -13,102 +13,51 @@
 #include <stdlib.h>
 #include "filler.h"
 #include "libft.h"
-#include <limits.h>
-#include <printf.h>
 
-t_sqr	*plateau_init(int fd)
+t_sqr	*read_plateau(char *str, int fd)
 {
 	t_sqr	*plateau;
 	char	*line;
-
-	plateau = (t_sqr *)malloc(sizeof(t_sqr));
-	get_next_line(fd, &line);
-	plateau->rows = ft_atoi(line + 8);
-	plateau->columns = ft_atoi(ft_strchr(line + 8, ' '));
-	plateau->sqr = NULL;
-	plateau->evaluation = 0;
-	plateau->read = plateau_read;
-	plateau->sqrdup = sqrdup;
-	plateau->set_evaluation = set_evaluation;
-	plateau->destructor = destructor;
-	ft_strdel(&line);
-	return (plateau);
-}
-
-t_sqr	*piece_init()
-{
-	t_sqr	*piece;
-	char	*line;
-
-	piece = (t_sqr *)malloc(sizeof(t_sqr));
-	piece->rows = 0;
-	piece->columns = 0;
-	piece->sqr = NULL;
-	piece->read = piece_read;
-	piece->sqrdup = sqrdup;
-	piece->evaluation = 0;
-	piece->set_evaluation = set_evaluation;
-	piece->destructor = destructor;
-	return (piece);
-}
-
-char	**plateau_read(t_sqr *plateau, int fd)
-{
-	char	*line;
-	char	*tmp;
 	int		i;
 
+	plateau = (t_sqr *)malloc(sizeof(t_sqr));
+	plateau->rows = ft_atoi(ft_strchr(str, ' '));
+	plateau->columns = ft_atoi(ft_strrchr(str, ' '));
 	get_next_line(fd, &line);
 	ft_strdel(&line);
-	if (plateau->sqr == NULL)
-	{
-		plateau->sqr = (char **)malloc(sizeof(char *) * plateau->rows);
-		i = 0;
-		while (i < plateau->rows)
-			plateau->sqr[i++] = NULL;
-	}
+	plateau->sqr = (char **)malloc(plateau->rows * sizeof(char *));
 	i = 0;
 	while (i < plateau->rows)
 	{
 		get_next_line(fd, &line);
-		tmp = ft_strsub(line, 4, (size_t)plateau->columns);
-		ft_strdel(&plateau->sqr[i]);
-		plateau->sqr[i] = tmp;
+		plateau->sqr[i++] = ft_strdup(ft_strchr(line, ' ') + 1);
 		ft_strdel(&line);
-		i++;
 	}
-	return (plateau->sqr);
+	return (plateau);
 }
 
-char	**piece_read(t_sqr *piece, int fd)
+t_sqr	*read_piece(int fd)
 {
+	t_sqr	*piece;
 	char	*line;
-	char	*tmp;
 	int		i;
 
+	piece = (t_sqr *)malloc(sizeof(t_sqr));
 	get_next_line(fd, &line);
-	piece->rows = ft_atoi(line + 6);
-	piece->columns = ft_atoi(ft_strchr(line + 6, ' '));
+	piece->rows = ft_atoi(ft_strchr(line, ' '));
+	piece->columns = ft_atoi(ft_strrchr(line, ' '));
 	ft_strdel(&line);
-	if (piece->sqr == NULL)
-	{
-		piece->sqr = (char **)malloc(sizeof(char *) * piece->rows);
-		i = 0;
-		while (i < piece->rows)
-			piece->sqr[i++] = NULL;
-	}
+	piece->sqr = (char **)malloc(piece->rows * sizeof(char *));
 	i = 0;
 	while (i < piece->rows)
 	{
 		get_next_line(fd, &line);
-		tmp = line;
-		ft_strdel(&piece->sqr[i]);
-		piece->sqr[i] = tmp;
-		i++;
+		piece->sqr[i++] = ft_strdup(line);
+		ft_strdel(&line);
 	}
-	return (piece->sqr);
+	return (piece);
 }
-
+/*
 t_sqr	*sqrdup(t_sqr *sqr)
 {
 	t_sqr	*new;
@@ -131,13 +80,19 @@ t_sqr	*sqrdup(t_sqr *sqr)
 	new->destructor = sqr->destructor;
 	return (new);
 }
-
-void	destructor(t_sqr *sqr)
+*/
+void	destructor(t_sqr **sqr)
 {
 	int	i;
 
-	i = 0;
-	while (i < sqr->rows)
-		ft_strdel(&sqr->sqr[i++]);
-	free(sqr->sqr);
+	if (sqr)
+	{
+		i = 0;
+		while (i < (*sqr)->rows)
+			ft_strdel(&(*sqr)->sqr[i++]);
+		free((*sqr)->sqr);
+		(*sqr)->sqr = NULL;
+		free(*sqr);
+		*sqr = NULL;
+	}
 }

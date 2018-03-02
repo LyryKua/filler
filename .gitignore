@@ -6,6 +6,7 @@ output
 test
 *.[ao]
 tmp*
+a.out
 
 objs/
 .idea/
