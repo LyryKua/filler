@@ -29,11 +29,12 @@ INC_DIR :=				inc/
 HEADER :=				$(INC_DIR)filler.h
 
 FILLER_DIR :=			srcs/
-FILLER_SRCS :=			main.c				\
-						insert_piece.c		\
+FILLER_SRCS :=			insert_piece.c		\
+						lists.c				\
+						main.c				\
 						plateau_piece.c		\
 						putsqr.c			\
-						set_evaluation.c	\
+						get_evaluation.c	\
 						wave.c
 SRCS :=					$(addprefix $(FILLER_DIR), $(FILLER_SRCS))
 

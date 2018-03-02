@@ -10,69 +10,53 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "filler.h"
 #include <stdlib.h>
 #include <fcntl.h>
 #include <zconf.h>
-#include <errno.h>
-#include <stdio.h>
-#include "filler.h"
 #include "ft_printf.h"
 #include "libft.h"
 
-#define N	0
-#define M	0
-
-/*
-t_sqr	*piece_to_plateau(t_stuff *instance, int y, int x)
+static t_stuff	*stuff_init(int fd)
 {
-	t_sqr	*plato;
-	int		i;
-	int		j;
-
-	plato = instance->plateau.sqrdup(&instance->plateau);
-	i = 0;
-	while (i < instance->piece.rows)
-	{
-		j = 0;
-		while (j < instance->piece.columns)
-		{
-			if (instance->piece.sqr[i][j] == '*')
-				plato->sqr[y + i][x + j] = instance->me;
-			j++;
-		}
-		i++;
-	}
-	plato->set_evaluation(instance);
-	return (plato);
-}
-*/
-
-int		main(int argc, char *argv[])
-{
-	t_stuff	instance;
-	int		fd;
+	t_stuff	*stuff;
 	char	*line;
 
-	fd = open(argv[1], O_RDONLY);
 	get_next_line(fd, &line);
-	instance.me = (char)(line[10] == '1' ? 'O' : 'X');
+	stuff = (t_stuff *)malloc(sizeof(t_stuff));
+	stuff->me = (char)(line[10] == '1' ? 'O' : 'X');
+	stuff->enemy = (char)(line[10] == '1' ? 'X' : 'O');
 	ft_strdel(&line);
-	instance.plateau = plateau_init(fd);
-	instance.plateau->read(instance.plateau, fd);
-	instance.piece = piece_init();
-	instance.piece->read(instance.piece, fd);
-	instance.insert_piece = insert_piece;
-	instance.i = 0;
-	instance.j = 0;
-	instance.insert_piece(&instance);
+	stuff->read_plateau = read_plateau;
+	stuff->read_piece = read_piece;
+	stuff->insert_piece = insert_piece;
+	stuff->destructor = destructor;
+	stuff->i = 0;
+	stuff->j = 0;
+	return (stuff);
+}
+
+int				main(int argc, char *argv[])
+{
+	t_stuff	*instance;
+	char	*line;
+	int		file;
+	int		fd;
+
+	file = open("output", O_WRONLY | O_TRUNC);
+	fd = open(argv[1], O_RDONLY);
+	instance = stuff_init(fd);
 	while (get_next_line(fd, &line) == 1)
 	{
+		instance->plateau = instance->read_plateau(line, fd);
 		ft_strdel(&line);
-		instance.plateau->read(instance.plateau, fd);
-		instance.piece->read(instance.piece, fd);
-		instance.insert_piece(&instance);
+		instance->piece = instance->read_piece(fd);
+
+		instance->destructor(&instance->plateau);
+		instance->destructor(&instance->piece);
 	}
 	close(fd);
+	close(file);
 	return (0);
 }
 
