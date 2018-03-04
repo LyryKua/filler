@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include <stdlib.h>
+#include <limits.h>
 #include "filler.h"
 #include "get_next_line.h"
 #include "libft.h"
@@ -34,7 +35,7 @@ static t_stuff	*stuff_init(int fd)
 	stuff->destructor = destructor;
 	stuff->i = 0;
 	stuff->j = 0;
-	stuff->len = 0;
+	stuff->len = INT_MAX;
 	stuff->set_i_j = set_i_j;
 	return (stuff);
 }
@@ -43,24 +44,25 @@ int				main(int argc, char *argv[])
 {
 	t_stuff	*instance;
 	char	*line;
-	int		file;
+	/* TMP */
 	int		fd;
+	int		file;
 
 	file = open("output", O_WRONLY | O_TRUNC);
-	fd = open(argv[1], O_RDONLY);
+//	fd = open(argv[1], O_RDONLY);
+	fd = 0;
 	instance = stuff_init(fd);
 	while (get_next_line(fd, &line) == 1)
 	{
-		instance->plateau = instance->read_plateau(line, fd);
+		instance->plateau = instance->read_plateau(line, fd, file);
 		ft_strdel(&line);
-		instance->piece = instance->read_piece(fd);
+		instance->piece = instance->read_piece(fd, file);
 		instance->insert_piece(instance);
 		instance->destructor(&instance->plateau);
 		instance->destructor(&instance->piece);
 	}
-	close(fd);
+	free(instance);
 	close(file);
+//	close(fd);
 	return (0);
 }
-
-// ./filler_vm -p1 user1 -p2 user2 -v -f samples/w1.flr
