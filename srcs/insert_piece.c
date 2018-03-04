@@ -1,54 +1,42 @@
-#include <limits.h>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   set_i_j.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: khrechen <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/03/04 18:42:15 by khrechen          #+#    #+#             */
+/*   Updated: 2018/03/04 18:42:17 by khrechen         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "filler.h"
 #include "libft.h"
-#include "ft_printf.h"
 
-static unsigned int	count_match(t_stuff *instance, int i, int j)
+void				set_i_j(t_stuff *instance, int i, int j)
 {
-	unsigned int	match;
-	int				y;
-	int				x;
+	int	y;
+	int	x;
+	int	len;
 
-	match = 0;
 	y = 0;
-	while (y < instance->piece->rows)
+	while (y < instance->plateau->rows)
 	{
 		x = 0;
-		while (x < instance->piece->columns)
+		while (x < instance->plateau->columns)
 		{
-			if (instance->piece->sqr[y][x] == '*')
+			if (instance->plateau->sqr[y][x] == instance->enemy)
 			{
-				if (instance->plateau->sqr[i + y][j + x] == instance->enemy)
-					return (0);
-				else if (instance->plateau->sqr[i + y][j + x] == instance->me)
-					match++;
+				len = ft_abs(y - i) + ft_abs(x - j);
+				if (len < instance->len)
+				{
+					instance->i = i;
+					instance->j = j;
+					instance->len = len;
+				}
 			}
 			x++;
 		}
 		y++;
 	}
-	return (match);
-}
-
-void				insert_piece(t_stuff *instance)
-{
-	int		i;
-	int		j;
-
-	instance->i = 0;
-	instance->j = 0;
-	instance->len = INT_MAX;
-	i = 0;
-	while (i <= instance->plateau->rows - instance->piece->rows)
-	{
-		j = 0;
-		while (j <= instance->plateau->columns - instance->piece->columns)
-		{
-			if (count_match(instance, i, j) == 1)
-				instance->set_i_j(instance, i, j);
-			j++;
-		}
-		i++;
-	}
-	ft_printf("%d %d\n", instance->i, instance->j);
 }

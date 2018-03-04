@@ -24,11 +24,7 @@ set(HEADERS
 
 set(SOURCE_FILES
         srcs/insert_piece.c
-#        srcs/lists.c
-        srcs/plateau_piece.c
-        srcs/putsqr.c
         srcs/set_i_j.c
-        srcs/wave.c
 
         srcs/main.c
         ) # sources

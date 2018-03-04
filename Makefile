@@ -6,7 +6,7 @@
 #    By: khrechen <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/12/14 14:55:42 by khrechen          #+#    #+#              #
-#    Updated: 2018/02/04 15:36:49 by khrechen         ###   ########.fr        #
+#    Updated: 2018/03/04 18:43:59 by khrechen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,7 +31,6 @@ HEADER :=				$(INC_DIR)filler.h
 FILLER_DIR :=			srcs/
 FILLER_SRCS :=			insert_piece.c		\
 						main.c				\
-						plateau_piece.c		\
 						set_i_j.c
 SRCS :=					$(addprefix $(FILLER_DIR), $(FILLER_SRCS))
 
@@ -47,7 +46,7 @@ INC :=					-I$(LIBFTPRINTF_DIR)inc/		\
 
 CC :=					clang
 
-#CFLAGS :=				-Wall -Werror -Wextra
+CFLAGS :=				-Wall -Werror -Wextra
 LIBFTPRINTF_FLAGS :=	-L$(LIBFTPRINTF_DIR) -lftprintf
 FLAGS :=				$(INC) $(CFLAGS) $(LIBFTPRINTF_FLAGS)
 
