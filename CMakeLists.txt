@@ -1,13 +1,12 @@
 cmake_minimum_required(VERSION 3.8)
 
-project(khrechen.filler)
+project(magic)
 
 #set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Werror -Wextra")
 
 include_directories(
         libftprintf/libft/inc
         libftprintf/inc
-        inc
 ) # header directories
 
 link_directories(
@@ -16,17 +15,20 @@ link_directories(
 
 link_libraries(
         ftprintf
+        mlx
 )
 
 set(HEADERS
-        inc/filler.h
+        visualization/visualization.h
+        visualization/color.h
         ) # headers
 
 set(SOURCE_FILES
-        srcs/insert_piece.c
-        srcs/set_i_j.c
+        visualization/graphics.c
+        visualization/plateau_piece.c
 
-        srcs/main.c
-        ) # sources
+        visualization/main.c) # sources
 
-add_executable(khrechen.filler ${SOURCE_FILES} ${HEADERS}) # compilation
+add_executable(magic ${SOURCE_FILES} ${HEADERS}) # compilation
+
+target_link_libraries(magic "-framework OpenGL" "-framework AppKit")

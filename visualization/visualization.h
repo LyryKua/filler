@@ -1,22 +1,47 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   filler.h                                           :+:      :+:    :+:   */
+/*   visualization.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: khrechen <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/02/03 20:26:31 by khrechen          #+#    #+#             */
-/*   Updated: 2018/02/03 20:26:33 by khrechen         ###   ########.fr       */
+/*   Created: 2018/03/05 12:47:24 by khrechen          #+#    #+#             */
+/*   Updated: 2018/03/05 12:47:28 by khrechen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FILLER_H
-# define FILLER_H
+#ifndef VISUALIZATION_H
+# define VISUALIZATION_H
 
-/*
-** p1 - O
-** p2 - X
-*/
+typedef struct s_graphics	t_graphics;
+typedef struct s_point		t_point;
+
+struct		s_point
+{
+	int				x;
+	int				y;
+	unsigned int	color;
+};
+
+struct	s_graphics
+{
+	void	*mlx;
+	void	*win;
+	void	*img;
+	void	*addr;
+	int		bpp;
+	int		sl;
+	int		e;
+	int		w;
+	int		h;
+	void	(*put_pixel)(t_graphics *, t_point *);
+	void	(*destructor)(t_graphics **);
+};
+
+t_graphics	*init_graphics(int width, int height, char *title);
+
+/* ************************************************************************** */
+
 
 typedef struct s_sqr	t_sqr;
 typedef struct s_stuff	t_stuff;
@@ -30,24 +55,13 @@ struct	s_sqr
 
 struct	s_stuff
 {
-	char	me;
-	char	enemy;
 	t_sqr	*plateau;
 	t_sqr	*(*read_plateau)(char *);
 	t_sqr	*piece;
 	t_sqr	*(*read_piece)(void);
-	void	(*insert_piece)(t_stuff *);
 	void	(*destructor)(t_sqr **);
-	int		i;
-	int		j;
-	int		len;
-	void	(*set_i_j)(t_stuff *, int, int);
 };
 
-t_sqr	*read_plateau(char *str);
-t_sqr	*read_piece(void);
-void	insert_piece(t_stuff *instance);
-void	set_i_j(t_stuff *instance, int i, int j);
-void	destructor(t_sqr **sqr);
+t_stuff	*init_stuff();
 
 #endif

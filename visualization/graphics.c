@@ -1,0 +1,55 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   graphics_init.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: khrechen <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/03/05 12:47:24 by khrechen          #+#    #+#             */
+/*   Updated: 2018/03/05 12:47:28 by khrechen         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include <stdlib.h>
+#include <mlx.h>
+#include "visualization.h"
+#include "libft.h"
+
+void		put_pixel(t_graphics *graphics, t_point *point)
+{
+	if (point->x >= graphics->w || point->x < 0
+		|| point->y >= graphics->h || point->y < 0)
+		return ;
+	ft_memcpy(graphics->addr + (point->x * 4 + point->y * graphics->sl),
+			  &point->color, 4);
+}
+
+void		destructor_graphics(t_graphics **graphics)
+{
+	if (graphics)
+	{
+		mlx_destroy_image((*graphics)->mlx, (*graphics)->img);
+		(*graphics)->img = NULL;
+		mlx_destroy_window((*graphics)->mlx, (*graphics)->win);
+		(*graphics)->win = NULL;
+		free(*graphics);
+		*graphics = NULL;
+	}
+}
+
+t_graphics	*init_graphics(int w, int h, char *title)
+{
+	t_graphics	*graphics;
+
+	graphics = (t_graphics *)malloc(sizeof(t_graphics));
+	graphics->mlx = mlx_init();
+	graphics->win = mlx_new_window(graphics->mlx, w, h, title);
+	graphics->img = mlx_new_image(graphics->mlx, w, h);
+	graphics->addr = mlx_get_data_addr(graphics->img, &graphics->bpp,
+									   &graphics->sl, &graphics->e);
+	graphics->w = w;
+	graphics->h = h;
+	graphics->put_pixel = put_pixel;
+	graphics->destructor = destructor_graphics;
+	return (graphics);
+}
