@@ -6,7 +6,7 @@
 #    By: khrechen <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/12/14 14:55:42 by khrechen          #+#    #+#              #
-#    Updated: 2018/02/04 15:37:02 by khrechen         ###   ########.fr        #
+#    Updated: 2018/03/07 11:18:23 by khrechen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,7 +25,7 @@ LIGHT_CYAN :=	$(SWITCH)96m
 
 NAME :=			libftprintf.a
 
-INC_DIR :=		./inc/
+INC_DIR :=		inc/
 HEADER :=		$(INC_DIR)ft_printf.h
 
 SRCS :=			ft_printf.c						\
@@ -34,23 +34,21 @@ SRCS :=			ft_printf.c						\
 				get_specification.c				\
 				print_data.c					\
 				with_len.c						\
-												\
 				c_upper_case.c					\
 				c_lower_case.c					\
 				s_upper_case.c					\
 				s_lower_case.c					\
 				p_lower_case.c					\
-												\
 				dec_long_long.c					\
 				dec_unsigned_long_long.c		\
 				bin_unsigned_long_long.c		\
 				oct_unsigned_long_long.c		\
 				hex_unsigned_long_long.c
 
-OBJS_DIR :=		./objs/
+OBJS_DIR :=		objs/
 OBJS :=			$(addprefix $(OBJS_DIR), $(SRCS:.c=.o))
 
-LIBFT_DIR :=	./libft/
+LIBFT_DIR :=	libft/
 LIBFT :=		$(LIBFT_DIR)libft.a
 
 INC :=			-I$(LIBFT_DIR)inc/	\
@@ -64,7 +62,7 @@ FLAGS :=		$(INC) $(CFLAGS)
 all: $(NAME)
 
 $(NAME): $(OBJS) $(LIBFT)
-	ar rc $(NAME) $(OBJS) $(LIBFT_DIR)/objs/*.o
+	ar rc $(NAME) $(OBJS) $(LIBFT_DIR)objs/*.o
 	ranlib $(NAME)
 
 $(OBJS_DIR)%.o: %.c
@@ -81,26 +79,18 @@ lib:
 	make -C libft
 
 libclean:
-	make clean -C $(LIBFT_DIR)
+	make clean -C libft
 
 libfclean:
-	make fclean -C $(LIBFT_DIR)
+	make fclean -C libft
+
+libre: libfclean lib
 
 clean: libclean
 	rm -rf $(OBJS_DIR)
 
-fclean: clean libfclean
+fclean: libfclean
+	rm -rf $(OBJS_DIR)
 	rm -f $(NAME)
 
 re: fclean all
-
-norm:
-	make norm -C $(LIBFT_DIR)
-	norminette $(SRCS) $(HEADER)
-
-pu:
-	make pu -C $(LIBFT_DIR)
-	git add Makefile .gitignore author $(SRCS) $(HEADER)
-
-.PHONY: all lib libclean libfclean clean fclean re norm pu
-.SILENT:

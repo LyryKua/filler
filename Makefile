@@ -6,7 +6,7 @@
 #    By: khrechen <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/12/14 14:55:42 by khrechen          #+#    #+#              #
-#    Updated: 2018/03/04 18:43:59 by khrechen         ###   ########.fr        #
+#    Updated: 2018/03/07 11:53:58 by khrechen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,80 +26,62 @@ LIGHT_CYAN :=			$(SWITCH)96m
 NAME :=					khrechen.filler
 
 INC_DIR :=				inc/
-HEADER :=				$(INC_DIR)filler.h
 
-FILLER_DIR :=			srcs/
-FILLER_SRCS :=			insert_piece.c		\
-						main.c				\
-						set_i_j.c
-SRCS :=					$(addprefix $(FILLER_DIR), $(FILLER_SRCS))
+LIBFTPRINTF_DIR :=		libftprintf/
+
+SRCS_DIR :=				srcs/
 
 OBJS_DIR :=				objs/
-OBJS :=					$(addprefix $(OBJS_DIR), $(FILLER_SRCS:.c=.o))
 
-LIBFTPRINTF_DIR :=		./libftprintf/
-LIBFTPRINTF :=			libftprintf.a
+SRCS :=					insert_piece.c	\
+						main.c			\
+						plateau_piece.c
+
+OBJS :=					$(SRCS:.c=.o)
+
+SRCS_PATHS :=			$(addprefix $(SRCS_DIR), $(SRCS))
+
+OBJS_PATHS :=			$(addprefix $(OBJS_DIR), $(OBJS))
+
+LIBFTPRINTF :=			$(LIBFTPRINTF_DIR)libftprintf.a
+
+CC :=					gcc
 
 INC :=					-I$(LIBFTPRINTF_DIR)inc/		\
 						-I$(LIBFTPRINTF_DIR)libft/inc	\
 						-I$(INC_DIR)
-
-CC :=					clang
-
 CFLAGS :=				-Wall -Werror -Wextra
 LIBFTPRINTF_FLAGS :=	-L$(LIBFTPRINTF_DIR) -lftprintf
-FLAGS :=				$(INC) $(CFLAGS) $(LIBFTPRINTF_FLAGS)
 
 all: $(NAME)
 
-$(NAME): lib $(OBJS)
-	echo "$(YELLOW)Linking binary...$(NORMAL)"
-	$(CC) $(FLAGS) $(OBJS) -o $(NAME)
-	echo "$(LIGHT_GREEN)$(NAME)$(GREEN) is your binary! Enjoy!$(NORMAL)"
+$(NAME): $(LIBFTPRINTF) $(OBJS_PATHS) 	
+	$(CC) $(LIBFTPRINTF_FLAGS) $(OBJS_PATHS) -o $(NAME)
+	@echo "$(GREEN)$(NAME) created$(NORMAL)"
 
-$(OBJS_DIR)%.o: $(FILLER_DIR)%.c
-	echo "$(CYAN)Compiling $@$(NORMAL)"
-	$(CC) $(CFLAGS) $(INC) -c $< -o $@  
-
-$(OBJS): | $(OBJS_DIR)
+$(OBJS_DIR)%.o: $(SRCS_DIR)%.c | $(OBJS_DIR)
+	@echo "$(GREEN)Compile $<$(NORMAL)"
+	$(CC) $(CFLAGS) $(INC) -c $< -o $@
 
 $(OBJS_DIR):
 	mkdir $(OBJS_DIR)
-	echo "$(GREEN)$(OBJS_DIR) created...$(NORMAL)"
-
-lib: $(LIBFTPRINTF)
 
 $(LIBFTPRINTF):
-	echo "$(YELLOW)Making $(LIBFTPRINTF)$(NORMAL)"
+	@echo "$(YELLOW)Compiling libft... $<$(NORMAL)"
 	make -C $(LIBFTPRINTF_DIR)
 
-libclean:
-	echo "$(RED)Cleaning $(LIBFTPRINTF)$(NORMAL)"
+clean:
 	make clean -C $(LIBFTPRINTF_DIR)
+	rm -rf $(OBJS_PATHS)
+	@echo "$(RED)$(NAME) objects cleared$(NORMAL)"
 
-libfclean:
-	echo "$(RED)Fcleaning $(LIBFTPRINTF)$(NORMAL)"
+fclean: clean
 	make fclean -C $(LIBFTPRINTF_DIR)
-
-clean: libclean
-	rm -rf $(OBJS_DIR)
-	echo "$(RED)$(OBJS_DIR) deleted$(NORMAL)"
-
-fclean: clean libfclean
-	rm -f $(NAME)
-	echo "$(RED)$(NAME) deleted$(NORMAL)"
-
+	rm -rf $(NAME)
+	@echo "$(RED)$(NAME) deleted$(NORMAL)"
+	
 re: fclean all
 
-norm:
-	make norm -C $(LIBFTPRINTF_DIR)
-	norminette $(SRCS) $(HEADER)
+pu: fclean 
 
-pu: 
-	make pu -C $(LIBFTPRINTF_DIR)
-	git add Makefile .gitignore author $(SRCS) $(HEADER)
-	git status
-	echo "$(CYAN)You can commit your files$(NORMAL)"
-
-.PHONY: all lib libclean libfclean clean fclean re norm pu $(NAME) $(LIBFTPRINTF)
-.SILENT:
+.PHONY: clean fclean re
