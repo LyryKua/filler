@@ -15,7 +15,7 @@
 
 # define WIDTH	1440
 # define HEIGHT	900
-# define X	10
+# define X	20
 
 typedef struct s_graphics	t_graphics;
 typedef struct s_rect		t_rect;
@@ -33,7 +33,6 @@ struct	s_rect
 	int	x;
 	int	y;
 	int	w;
-	int	h;
 };
 
 struct	s_graphics
@@ -48,7 +47,6 @@ struct	s_graphics
 	int		w;
 	int		h;
 	void	(*put_pixel)(t_graphics *, int, int, unsigned int);
-	void	(*destructor)(t_graphics **);
 };
 
 t_graphics	*init_graphics(int width, int height, char *title);
@@ -65,6 +63,7 @@ struct	s_all
 	t_stuff		*instance;
 	t_graphics	*graphics;
 	int			fd;
+	int			x;
 };
 
 struct	s_sqr
@@ -77,19 +76,18 @@ struct	s_sqr
 struct	s_stuff
 {
 	t_sqr	*plateau;
-	t_sqr	*(*read_plateau)(char *, int);
+	t_sqr	*(*read)(char *, int);
 	void	(*destructor)(t_sqr **);
 };
 
 t_stuff	*init_stuff();
 
-void	draw(t_graphics *graphics, t_stuff *instance);
-void	draw_rectangle(t_graphics *graphics, t_rect *rect, unsigned int color);
+void	draw(t_graphics *graphics, t_stuff *instance, int x);
 void	fill_rectangle(t_graphics *graphics, t_rect *rect, unsigned int color);
 void	draw_old_x(t_graphics *graphics, t_rect *rect, unsigned int color);
 void	draw_new_x(t_graphics *graphics, t_rect *rect, unsigned int color);
 void	draw_old_o(t_graphics *graphics, t_rect *rect, unsigned int color);
 void	draw_new_o(t_graphics *graphics, t_rect *rect, unsigned int color);
-void	putsqr(t_sqr *plateau);
+void	draw_grid(t_graphics *graphics, int x);
 
 #endif

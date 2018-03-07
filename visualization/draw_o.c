@@ -41,7 +41,7 @@ static void	draw_part_o(t_graphics *graphics, t_point start, t_point end,
 	}
 }
 
-void	draw_old_o(t_graphics *graphics, t_rect *rect, unsigned int color)
+void		draw_old_o(t_graphics *graphics, t_rect *rect, unsigned int color)
 {
 	t_point	start;
 	t_point	end;
@@ -51,23 +51,23 @@ void	draw_old_o(t_graphics *graphics, t_rect *rect, unsigned int color)
 	draw_old_x(graphics, rect, color);
 	start.color = BLACK;
 	start.x = rect->x + (int)rint(rect->w * 0.35);
-	start.y = rect->y + (int)rint(rect->h * 0.15);
+	start.y = rect->y + (int)rint(rect->w * 0.15);
 	end.x = rect->x + (int)rint(rect->w * 0.65);
 	end.y = start.y;
-	finish = rect->y + (int)rint(rect->h * 0.85);
+	finish = rect->y + (int)rint(rect->w * 0.85);
 	draw_part_o(graphics, start, end, finish);
 	start.x = rect->x + (int)rint(rect->w * 0.15);
-	start.y = rect->y + (int)rint(rect->h * 0.35);
+	start.y = rect->y + (int)rint(rect->w * 0.35);
 	end.x = rect->x + (int)rint(rect->w * 0.85);
-	end.y = rect->y + (int)rint(rect->h * 0.35);
-	finish = rect->y + (int)rint(rect->h * 0.65);
+	end.y = rect->y + (int)rint(rect->w * 0.35);
+	finish = rect->y + (int)rint(rect->w * 0.65);
 	draw_part_o(graphics, start, end, finish);
 	start.x++;
 	finish++;
 	draw_part_o(graphics, start, end, finish);
 }
 
-void	draw_new_o(t_graphics *graphics, t_rect *rect, unsigned int color)
+void		draw_new_o(t_graphics *graphics, t_rect *rect, unsigned int color)
 {
 	t_point	start;
 	t_point	end;
@@ -76,16 +76,16 @@ void	draw_new_o(t_graphics *graphics, t_rect *rect, unsigned int color)
 	draw_new_x(graphics, rect, color);
 	start.color = color;
 	start.x = rect->x + (int)rint(rect->w * 0.35);
-	start.y = rect->y + (int)rint(rect->h * 0.15);
+	start.y = rect->y + (int)rint(rect->w * 0.15);
 	end.x = rect->x + (int)rint(rect->w * 0.65);
 	end.y = start.y;
-	finish = rect->y + (int)rint(rect->h * 0.85);
+	finish = rect->y + (int)rint(rect->w * 0.85);
 	draw_part_o(graphics, start, end, finish);
 	start.x = rect->x + (int)rint(rect->w * 0.15);
-	start.y = rect->y + (int)rint(rect->h * 0.35);
+	start.y = rect->y + (int)rint(rect->w * 0.35);
 	end.x = rect->x + (int)rint(rect->w * 0.85);
-	end.y = rect->y + (int)rint(rect->h * 0.35);
-	finish = rect->y + (int)rint(rect->h * 0.65);
+	end.y = rect->y + (int)rint(rect->w * 0.35);
+	finish = rect->y + (int)rint(rect->w * 0.65);
 	draw_part_o(graphics, start, end, finish);
 	start.x++;
 	finish++;

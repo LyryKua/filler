@@ -6,7 +6,7 @@
 #    By: khrechen <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/12/14 14:55:42 by khrechen          #+#    #+#              #
-#    Updated: 2018/03/07 11:00:31 by khrechen         ###   ########.fr        #
+#    Updated: 2018/03/07 12:04:56 by khrechen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,70 +25,68 @@ LIGHT_CYAN :=			$(SWITCH)96m
 
 NAME :=					magic
 
-HEADER :=				visualization.h
+INC_DIR :=				./
+
+LIBFTPRINTF_DIR :=		../libftprintf/
+
+SRCS_DIR :=				./
+
+OBJS_DIR :=				objs/
 
 SRCS :=					draw.c			\
+						draw_grid.c		\
 						draw_o.c		\
 						draw_x.c		\
 						graphics.c		\
 						main.c			\
 						plateau_piece.c
 
-OBJS_DIR :=				objs/
-OBJS :=					$(addprefix $(OBJS_DIR), $(SRCS:.c=.o))
+OBJS :=					$(SRCS:.c=.o)
 
-LIBFTPRINTF_DIR :=		../libftprintf/
-LIBFTPRINTF :=			libftprintf.a
+SRCS_PATHS :=			$(addprefix $(SRCS_DIR), $(SRCS))
+
+OBJS_PATHS :=			$(addprefix $(OBJS_DIR), $(OBJS))
+
+LIBFTPRINTF :=			$(LIBFTPRINTF_DIR)libftprintf.a
+
+CC :=					gcc
 
 INC :=					-I$(LIBFTPRINTF_DIR)inc/		\
 						-I$(LIBFTPRINTF_DIR)libft/inc	\
-						-I.
-
-CC :=					clang
-
-#CFLAGS :=				-Wall -Werror -Wextra
-MLX_FLGAS :=			-lmlx -framework OpenGL -framework AppKit
+						-I$(INC_DIR)
+CFLAGS :=				-Wall -Werror -Wextra
 LIBFTPRINTF_FLAGS :=	-L$(LIBFTPRINTF_DIR) -lftprintf
+MLX_FLAGS :=			-lmlx -framework OpenGL -framework AppKit 
 
 all: $(NAME)
 
-$(NAME): lib $(OBJS)
-	$(CC) $(LIBFTPRINTF_FLAGS) $(MLX_FLGAS) $(OBJS) -o $(NAME)
+$(NAME): $(LIBFTPRINTF) $(OBJS_PATHS) 	
+	$(CC) $(LIBFTPRINTF_FLAGS) $(MLX_FLAGS) $(OBJS_PATHS) -o $(NAME)
+	@echo "$(GREEN)$(NAME) created$(NORMAL)"
 
-$(OBJS_DIR)%.o: %.c
-	$(CC) $(CFLAGS) $(INC) -c $< -o $@  
-
-$(OBJS): | $(OBJS_DIR)
+$(OBJS_DIR)%.o: $(SRCS_DIR)%.c | $(OBJS_DIR)
+	@echo "$(GREEN)Compile $<$(NORMAL)"
+	$(CC) $(CFLAGS) $(INC) -c $< -o $@
 
 $(OBJS_DIR):
 	mkdir $(OBJS_DIR)
 
-lib: $(LIBFTPRINTF)
-
 $(LIBFTPRINTF):
+	@echo "$(YELLOW)Compiling libft... $<$(NORMAL)"
 	make -C $(LIBFTPRINTF_DIR)
 
-libclean:
+clean:
 	make clean -C $(LIBFTPRINTF_DIR)
+	rm -rf $(OBJS_PATHS)
+	@echo "$(RED)$(NAME) objects cleared$(NORMAL)"
 
-libfclean:
+fclean: clean
 	make fclean -C $(LIBFTPRINTF_DIR)
-
-clean: libclean
-	rm -rf $(OBJS_DIR)
-
-fclean: clean libfclean
-	rm -f $(NAME)
-
+	rm -rf $(NAME)
+	@echo "$(RED)$(NAME) deleted$(NORMAL)"
+	
 re: fclean all
 
-norm:
-	make norm -C $(LIBFTPRINTF_DIR)
-	norminette $(SRCS) $(HEADER)
+pu: fclean 
 
-pu: 
-	make pu -C $(LIBFTPRINTF_DIR)
-	git add Makefile .gitignore author $(SRCS) $(HEADER)
-	git status
-
-.PHONY: all lib libclean libfclean clean fclean re norm pu $(NAME) $(LIBFTPRINTF)
+.PHONY: clean fclean re

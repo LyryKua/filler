@@ -15,55 +15,25 @@
 #include <mlx.h>
 #include <stdlib.h>
 #include <math.h>
-#include <printf.h>
 #include "key_events.h"
 #include "visualization.h"
 #include "get_next_line.h"
 #include "libft.h"
-#include "color.h"
+#include "key_map.h"
 
-void	draw_grid(t_graphics *graphics)
+static int		close_window(void)
 {
-	int	i;
-	int	j;
-	int	finish;
-
-	ft_bzero(graphics->addr, WIDTH * HEIGHT * 4);
-	i = X;
-	while (i < graphics->h)
-	{
-		finish = i + (int)rint(X * 0.1);
-		while (i < finish)
-		{
-			j = 0;
-			while (j < graphics->w)
-			{
-				graphics->put_pixel(graphics, i, j, 0x111111);
-				j++;
-			}
-			i++;
-		}
-		i += X;
-	}
-	i = X;
-	while (i < graphics->w)
-	{
-		finish = i + (int)rint(X * 0.1);
-		while (i < finish)
-		{
-			j = 0;
-			while (j < graphics->h)
-			{
-				graphics->put_pixel(graphics, j, i, 0x111111);
-				j++;
-			}
-			i++;
-		}
-		i += X;
-	}
+	exit(0);
 }
 
-int		visualization(t_all *param)
+static int		esc_exit(int keycode)
+{
+	if (keycode == ESC)
+		close_window();
+	return (0);
+}
+
+static int		visualization(t_all *param)
 {
 	char	*line;
 
@@ -71,49 +41,65 @@ int		visualization(t_all *param)
 	{
 		if (ft_strstr(line, "Plateau"))
 		{
-			param->instance->plateau = param->instance->read_plateau(line,
-																	param->fd);
-//			ft_bzero(param->graphics->addr, WIDTH * HEIGHT * 4);
-			draw_grid(param->graphics);
-			draw(param->graphics, param->instance);
+			param->instance->plateau = param->instance->read(line, param->fd);
+			draw_grid(param->graphics, param->x);
+			draw(param->graphics, param->instance, param->x);
 			mlx_put_image_to_window(param->graphics->mlx, param->graphics->win,
-													param->graphics->img, 0 ,0);
+													param->graphics->img, 0, 0);
 			param->instance->destructor(&param->instance->plateau);
+			ft_strdel(&line);
+			break ;
+		}
+		if (ft_strstr(line, "=="))
+		{
+			ft_putendl(line);
+			ft_strdel(&line);
+			get_next_line(param->fd, &line);
+			ft_putendl(line);
+		}
+		ft_strdel(&line);
+	}
+	return (0);
+}
+
+static t_sqr	*first_read(int fd, t_stuff *instance)
+{
+	char	*line;
+
+	while (get_next_line(fd, &line) == 1)
+	{
+		if (ft_strstr(line, "Plateau"))
+		{
+			instance->plateau = instance->read(line, fd);
 			ft_strdel(&line);
 			break ;
 		}
 		ft_strdel(&line);
 	}
-//	usleep(600000);
-	return (0);
+	return (instance->plateau);
 }
 
-int		main(int argc, char *argv[])
+int				main(void)
 {
 	t_all	all;
-	char	*line;
 	int		win_w;
 	int		win_h;
 
-	all.fd = open(argv[1], O_RDONLY);
+	all.x = X;
+	all.fd = 0;
 	all.instance = init_stuff();
-	while (get_next_line(all.fd, &line) == 1)
-	{
-		if (ft_strstr(line, "Plateau"))
-		{
-			all.instance->plateau = all.instance->read_plateau(line, all.fd);
-			ft_strdel(&line);
-			break;
-		}
-		ft_strdel(&line);
-	}
-	win_h = (int)rint(all.instance->plateau->rows * X * 1.1 - X * 0.1);
-	win_w = (int)rint(all.instance->plateau->columns * X * 1.1 - X * 0.1);
+	all.instance->plateau = first_read(all.fd, all.instance);
+	if (all.instance->plateau->rows * all.x > 1000)
+		all.x = 12;
+	win_h = (int)rint(all.x * (all.instance->plateau->rows * 1.1 - 0.1));
+	win_w = (int)rint(all.x * (all.instance->plateau->columns * 1.1 - 0.1));
 	all.graphics = init_graphics(win_w, win_h, "MAGIC");
-	draw(all.graphics, all.instance);
+	draw(all.graphics, all.instance, all.x);
 	all.instance->destructor(&all.instance->plateau);
 	mlx_put_image_to_window(all.graphics->mlx, all.graphics->win,
-													all.graphics->img, 0 ,0);
+													all.graphics->img, 0, 0);
+	mlx_key_hook(all.graphics->win, esc_exit, &all);
+	mlx_hook(all.graphics->win, DESTROY_NOTIFY, (1L << 17), close_window, NULL);
 	mlx_loop_hook(all.graphics->mlx, visualization, &all);
 	mlx_loop(all.graphics->mlx);
 	return (0);

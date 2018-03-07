@@ -2,8 +2,7 @@ cmake_minimum_required(VERSION 3.8)
 
 project(magic)
 
-#set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Werror -Wextra")
-
+#set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -W/error -Wextra")
 include_directories(
         libftprintf/libft/inc
         libftprintf/inc
@@ -26,8 +25,14 @@ set(HEADERS
 set(SOURCE_FILES
         visualization/graphics.c
         visualization/plateau_piece.c
+        visualization/putsqr.c
+        visualization/draw.c
+        visualization/draw_x.c
+        visualization/draw_o.c
+        visualization/draw_grid.c
 
-        visualization/main.c) # sources
+        visualization/main.c
+        ) # sources
 
 add_executable(magic ${SOURCE_FILES} ${HEADERS}) # compilation
 

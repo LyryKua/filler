@@ -22,19 +22,6 @@ void		put_pixel(t_graphics *graphics, int y, int x, unsigned int color)
 	ft_memcpy(graphics->addr + (x * 4 + y * graphics->sl), &color, 4);
 }
 
-void		destructor_graphics(t_graphics **graphics)
-{
-	if (graphics)
-	{
-		mlx_destroy_image((*graphics)->mlx, (*graphics)->img);
-		(*graphics)->img = NULL;
-		mlx_destroy_window((*graphics)->mlx, (*graphics)->win);
-		(*graphics)->win = NULL;
-		free(*graphics);
-		*graphics = NULL;
-	}
-}
-
 t_graphics	*init_graphics(int w, int h, char *title)
 {
 	t_graphics	*graphics;
@@ -44,10 +31,9 @@ t_graphics	*init_graphics(int w, int h, char *title)
 	graphics->win = mlx_new_window(graphics->mlx, w, h, title);
 	graphics->img = mlx_new_image(graphics->mlx, w, h);
 	graphics->addr = mlx_get_data_addr(graphics->img, &graphics->bpp,
-									   &graphics->sl, &graphics->e);
+												&graphics->sl, &graphics->e);
 	graphics->w = w;
 	graphics->h = h;
 	graphics->put_pixel = put_pixel;
-	graphics->destructor = destructor_graphics;
 	return (graphics);
 }

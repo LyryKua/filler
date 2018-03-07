@@ -11,21 +11,25 @@
 /* ************************************************************************** */
 
 #include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
 #include <libft.h>
 #include "visualization.h"
-#include "get_next_line.h"
 
 t_sqr	*read_plateau(char *str, int fd)
 {
 	t_sqr	*plateau;
 	char	*line;
 	int		i;
+	char	*tmp;
 
 	plateau = (t_sqr *)malloc(sizeof(t_sqr));
-	plateau->rows = ft_atoi(ft_strchr(str, ' '));
-	plateau->columns = ft_atoi(ft_strrchr(str, ' '));
+	if ((tmp = ft_strchr(str, ' ')))
+		plateau->rows = ft_atoi(tmp);
+	else
+		exit(1);
+	if ((tmp = ft_strrchr(str, ' ')))
+		plateau->columns = ft_atoi(tmp);
+	else
+		exit(1);
 	get_next_line(fd, &line);
 	ft_strdel(&line);
 	plateau->sqr = (char **)malloc(plateau->rows * sizeof(char *));
@@ -55,13 +59,13 @@ void	destructor_stuff(t_sqr **sqr)
 	}
 }
 
-t_stuff	*init_stuff()
+t_stuff	*init_stuff(void)
 {
 	t_stuff	*stuff;
 
 	stuff = (t_stuff *)malloc(sizeof(t_stuff));
 	stuff->plateau = NULL;
-	stuff->read_plateau = read_plateau;
+	stuff->read = read_plateau;
 	stuff->destructor = destructor_stuff;
 	return (stuff);
 }
