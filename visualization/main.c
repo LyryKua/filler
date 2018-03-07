@@ -12,47 +12,109 @@
 
 #include <fcntl.h>
 #include <zconf.h>
+#include <mlx.h>
 #include <stdlib.h>
-#include "libft.h"
+#include <math.h>
+#include <printf.h>
+#include "key_events.h"
 #include "visualization.h"
+#include "get_next_line.h"
+#include "libft.h"
+#include "color.h"
 
-int	main(int argc, char *argv[])
+void	draw_grid(t_graphics *graphics)
 {
-	t_stuff		*instance;
-	char		*line;
-	int			i;
-	int			fd;
-//	t_graphics	*graphics;
-//	t_point		point;
+	int	i;
+	int	j;
+	int	finish;
 
-//	graphics = init_graphics(442, 542, "test");
-//	point.x = 42;
-//	point.y = 42;
-//	point.color = GREEN;
-//	while (point.x < 142)
-//	{
-//		graphics->put_pixel(graphics, &point);
-//		point.x++;
-//	}
-//	mlx_put_image_to_window(graphics->mlx, graphics->win, graphics->img, 0, 0);
-//	mlx_loop(graphics->mlx);
-//	graphics->destructor(&graphics);
-//	fd = open(argv[1], O_RDONLY);
-//	i = 0;
-//	while (i++ < 9 & get_next_line(fd, &line) == 1)
-//		ft_strdel(&line);
-//	instance = init_stuff();
-//	get_next_line(fd, &line);
-//	ft_strdel(&line);
-//	instance->destructor(&instance->plateau);
-//	instance->destructor(&instance->piece);
-//	free(instance);
-//	close(fd);
-	while (get_next_line(STDIN_FILENO, &line) >= 0)
+	ft_bzero(graphics->addr, WIDTH * HEIGHT * 4);
+	i = X;
+	while (i < graphics->h)
 	{
-		if (ft_isalpha(line[0]))
-			ft_putendl(line);
+		finish = i + (int)rint(X * 0.1);
+		while (i < finish)
+		{
+			j = 0;
+			while (j < graphics->w)
+			{
+				graphics->put_pixel(graphics, i, j, 0x111111);
+				j++;
+			}
+			i++;
+		}
+		i += X;
+	}
+	i = X;
+	while (i < graphics->w)
+	{
+		finish = i + (int)rint(X * 0.1);
+		while (i < finish)
+		{
+			j = 0;
+			while (j < graphics->h)
+			{
+				graphics->put_pixel(graphics, j, i, 0x111111);
+				j++;
+			}
+			i++;
+		}
+		i += X;
+	}
+}
+
+int		visualization(t_all *param)
+{
+	char	*line;
+
+	while (get_next_line(param->fd, &line) == 1)
+	{
+		if (ft_strstr(line, "Plateau"))
+		{
+			param->instance->plateau = param->instance->read_plateau(line,
+																	param->fd);
+//			ft_bzero(param->graphics->addr, WIDTH * HEIGHT * 4);
+			draw_grid(param->graphics);
+			draw(param->graphics, param->instance);
+			mlx_put_image_to_window(param->graphics->mlx, param->graphics->win,
+													param->graphics->img, 0 ,0);
+			param->instance->destructor(&param->instance->plateau);
+			ft_strdel(&line);
+			break ;
+		}
 		ft_strdel(&line);
 	}
+//	usleep(600000);
+	return (0);
+}
+
+int		main(int argc, char *argv[])
+{
+	t_all	all;
+	char	*line;
+	int		win_w;
+	int		win_h;
+
+	all.fd = open(argv[1], O_RDONLY);
+	all.instance = init_stuff();
+	while (get_next_line(all.fd, &line) == 1)
+	{
+		if (ft_strstr(line, "Plateau"))
+		{
+			all.instance->plateau = all.instance->read_plateau(line, all.fd);
+			ft_strdel(&line);
+			break;
+		}
+		ft_strdel(&line);
+	}
+	win_h = (int)rint(all.instance->plateau->rows * X * 1.1 - X * 0.1);
+	win_w = (int)rint(all.instance->plateau->columns * X * 1.1 - X * 0.1);
+	all.graphics = init_graphics(win_w, win_h, "MAGIC");
+	draw(all.graphics, all.instance);
+	all.instance->destructor(&all.instance->plateau);
+	mlx_put_image_to_window(all.graphics->mlx, all.graphics->win,
+													all.graphics->img, 0 ,0);
+	mlx_loop_hook(all.graphics->mlx, visualization, &all);
+	mlx_loop(all.graphics->mlx);
 	return (0);
 }

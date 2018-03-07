@@ -6,7 +6,7 @@
 #    By: khrechen <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/12/14 14:55:42 by khrechen          #+#    #+#              #
-#    Updated: 2018/03/05 13:44:03 by khrechen         ###   ########.fr        #
+#    Updated: 2018/03/07 11:00:31 by khrechen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,13 +27,15 @@ NAME :=					magic
 
 HEADER :=				visualization.h
 
-VISUALIZATION_DIR :=	visualization/
-VISUALIZATION_SRCS :=	graphics.c	\
-						main.c
-SRCS :=					$(addprefix $(VISUALIZATION_DIR), $(VISUALIZATION_SRCS))
+SRCS :=					draw.c			\
+						draw_o.c		\
+						draw_x.c		\
+						graphics.c		\
+						main.c			\
+						plateau_piece.c
 
 OBJS_DIR :=				objs/
-OBJS :=					$(addprefix $(OBJS_DIR), $(VISUALIZATION_SRCS:.c=.o))
+OBJS :=					$(addprefix $(OBJS_DIR), $(SRCS:.c=.o))
 
 LIBFTPRINTF_DIR :=		../libftprintf/
 LIBFTPRINTF :=			libftprintf.a
@@ -41,9 +43,10 @@ LIBFTPRINTF :=			libftprintf.a
 INC :=					-I$(LIBFTPRINTF_DIR)inc/		\
 						-I$(LIBFTPRINTF_DIR)libft/inc	\
 						-I.
+
 CC :=					clang
 
-CFLAGS :=				-Wall -Werror -Wextra
+#CFLAGS :=				-Wall -Werror -Wextra
 MLX_FLGAS :=			-lmlx -framework OpenGL -framework AppKit
 LIBFTPRINTF_FLAGS :=	-L$(LIBFTPRINTF_DIR) -lftprintf
 
@@ -52,7 +55,7 @@ all: $(NAME)
 $(NAME): lib $(OBJS)
 	$(CC) $(LIBFTPRINTF_FLAGS) $(MLX_FLGAS) $(OBJS) -o $(NAME)
 
-$(OBJS_DIR)%.o: $(FILLER_DIR)%.c
+$(OBJS_DIR)%.o: %.c
 	$(CC) $(CFLAGS) $(INC) -c $< -o $@  
 
 $(OBJS): | $(OBJS_DIR)

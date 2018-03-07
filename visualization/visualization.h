@@ -13,14 +13,27 @@
 #ifndef VISUALIZATION_H
 # define VISUALIZATION_H
 
+# define WIDTH	1440
+# define HEIGHT	900
+# define X	10
+
 typedef struct s_graphics	t_graphics;
+typedef struct s_rect		t_rect;
 typedef struct s_point		t_point;
 
-struct		s_point
+struct	s_point
 {
 	int				x;
 	int				y;
 	unsigned int	color;
+};
+
+struct	s_rect
+{
+	int	x;
+	int	y;
+	int	w;
+	int	h;
 };
 
 struct	s_graphics
@@ -34,7 +47,7 @@ struct	s_graphics
 	int		e;
 	int		w;
 	int		h;
-	void	(*put_pixel)(t_graphics *, t_point *);
+	void	(*put_pixel)(t_graphics *, int, int, unsigned int);
 	void	(*destructor)(t_graphics **);
 };
 
@@ -45,6 +58,14 @@ t_graphics	*init_graphics(int width, int height, char *title);
 
 typedef struct s_sqr	t_sqr;
 typedef struct s_stuff	t_stuff;
+typedef struct s_all	t_all;
+
+struct	s_all
+{
+	t_stuff		*instance;
+	t_graphics	*graphics;
+	int			fd;
+};
 
 struct	s_sqr
 {
@@ -56,12 +77,19 @@ struct	s_sqr
 struct	s_stuff
 {
 	t_sqr	*plateau;
-	t_sqr	*(*read_plateau)(char *);
-	t_sqr	*piece;
-	t_sqr	*(*read_piece)(void);
+	t_sqr	*(*read_plateau)(char *, int);
 	void	(*destructor)(t_sqr **);
 };
 
 t_stuff	*init_stuff();
+
+void	draw(t_graphics *graphics, t_stuff *instance);
+void	draw_rectangle(t_graphics *graphics, t_rect *rect, unsigned int color);
+void	fill_rectangle(t_graphics *graphics, t_rect *rect, unsigned int color);
+void	draw_old_x(t_graphics *graphics, t_rect *rect, unsigned int color);
+void	draw_new_x(t_graphics *graphics, t_rect *rect, unsigned int color);
+void	draw_old_o(t_graphics *graphics, t_rect *rect, unsigned int color);
+void	draw_new_o(t_graphics *graphics, t_rect *rect, unsigned int color);
+void	putsqr(t_sqr *plateau);
 
 #endif

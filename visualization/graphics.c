@@ -15,13 +15,11 @@
 #include "visualization.h"
 #include "libft.h"
 
-void		put_pixel(t_graphics *graphics, t_point *point)
+void		put_pixel(t_graphics *graphics, int y, int x, unsigned int color)
 {
-	if (point->x >= graphics->w || point->x < 0
-		|| point->y >= graphics->h || point->y < 0)
+	if (x >= graphics->w || x < 0 || y >= graphics->h || y < 0)
 		return ;
-	ft_memcpy(graphics->addr + (point->x * 4 + point->y * graphics->sl),
-			  &point->color, 4);
+	ft_memcpy(graphics->addr + (x * 4 + y * graphics->sl), &color, 4);
 }
 
 void		destructor_graphics(t_graphics **graphics)
