@@ -6,7 +6,7 @@
 #    By: khrechen <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/12/14 14:55:42 by khrechen          #+#    #+#              #
-#    Updated: 2018/03/07 11:53:58 by khrechen         ###   ########.fr        #
+#    Updated: 2018/03/07 15:15:37 by khrechen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -78,6 +78,7 @@ clean:
 fclean: clean
 	make fclean -C $(LIBFTPRINTF_DIR)
 	rm -rf $(NAME)
+	rm -rf $(OBJS_DIR)
 	@echo "$(RED)$(NAME) deleted$(NORMAL)"
 	
 re: fclean all
